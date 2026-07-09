@@ -6,7 +6,7 @@
 import re
 import logging
 from datetime import datetime
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List, Optional, Tuple
 from pathlib import Path
 
 from .config_loader import ConfigLoader
@@ -29,16 +29,23 @@ class LocationAnalysisAgent:
         self.deepseek_client = DeepSeekClient()
         logger.info("选址分析Agent初始化完成")
     
-    async def extract_addresses(self, user_input: str) -> List[str]:
-        """从用户输入中提取候选地址（优先使用DeepSeek）"""
-        if self.deepseek_client.is_configured():
-            logger.info("使用DeepSeek API提取地址")
-            addresses = await self.deepseek_client.extract_addresses(user_input)
-            if addresses:
-                return addresses
+    async def extract_addresses(self, user_input: str) -> Tuple[List[str], str]:
+        """从用户输入中提取候选地址和城市（优先使用DeepSeek）"""
+        city = "北京"
         
-        logger.info("使用本地规则提取地址（DeepSeek未配置或失败）")
-        return self._extract_addresses_local(user_input)
+        if self.deepseek_client.is_configured():
+            logger.info("使用DeepSeek API提取地址和城市")
+            addresses, extracted_city = await self.deepseek_client.extract_addresses_with_city(user_input)
+            if addresses:
+                if extracted_city:
+                    city = extracted_city
+                return addresses, city
+        
+        logger.info("使用本地规则提取地址和城市（DeepSeek未配置或失败）")
+        addresses = self._extract_addresses_local(user_input)
+        city = self._extract_city_local(user_input)
+        
+        return addresses, city
     
     def _extract_addresses_local(self, user_input: str) -> List[str]:
         """本地规则提取候选地址（备用方案）"""
@@ -61,6 +68,22 @@ class LocationAnalysisAgent:
                 unique_addresses.append(addr)
         
         return unique_addresses
+    
+    def _extract_city_local(self, user_input: str) -> str:
+        """本地规则提取城市（备用方案）"""
+        city_keywords = [
+            "北京", "上海", "广州", "深圳", "杭州", "成都", "重庆", "武汉",
+            "西安", "南京", "天津", "苏州", "郑州", "长沙", "东莞", "佛山",
+            "合肥", "青岛", "沈阳", "厦门", "大连", "宁波", "无锡", "济南",
+            "哈尔滨", "福州", "昆明", "长春", "石家庄", "南宁", "贵阳",
+            "太原", "兰州", "乌鲁木齐", "呼和浩特", "海口", "银川", "西宁"
+        ]
+        
+        for city in city_keywords:
+            if city in user_input:
+                return city
+        
+        return "北京"
     
     async def extract_store_type(self, user_input: str) -> str:
         """提取店铺类型（优先使用DeepSeek）"""
@@ -106,7 +129,7 @@ class LocationAnalysisAgent:
         logger.info(f"开始分析，用户输入: {user_input}")
         
         # 第一阶段：信息提取（使用DeepSeek API）
-        addresses = await self.extract_addresses(user_input)
+        addresses, city = await self.extract_addresses(user_input)
         store_type = await self.extract_store_type(user_input)
         brand_positioning = await self.extract_brand_positioning(user_input)
         
@@ -116,12 +139,12 @@ class LocationAnalysisAgent:
                 "message": "未能从输入中识别到候选地址，请明确提供地址列表"
             }
         
-        logger.info(f"提取到地址: {addresses}")
+        logger.info(f"提取到城市: {city}，地址: {addresses}")
         
         # 第二阶段：数据采集（使用MCP服务）
         location_data_list = []
         for address in addresses:
-            location_data = await self.mcp_manager.collect_location_data(address)
+            location_data = await self.mcp_manager.collect_location_data(address, city)
             location_data_list.append(location_data)
         
         # 第三阶段：评分计算

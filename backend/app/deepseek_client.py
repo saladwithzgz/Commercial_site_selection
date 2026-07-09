@@ -6,7 +6,7 @@ DeepSeek API客户端模块
 import json
 import logging
 import os
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List, Optional, Tuple
 
 # 尝试加载.env文件
 try:
@@ -93,21 +93,24 @@ class DeepSeekClient:
     
     async def extract_addresses(self, user_input: str) -> List[str]:
         """使用DeepSeek提取候选地址"""
-        system_prompt = """你是一个地址提取专家。请从用户输入中提取出所有候选地址。
+        addresses, _ = await self.extract_addresses_with_city(user_input)
+        return addresses
+    
+    async def extract_addresses_with_city(self, user_input: str) -> Tuple[List[str], str]:
+        """使用DeepSeek提取候选地址和城市"""
+        system_prompt = """你是一个地址提取专家。请从用户输入中提取出所有候选地址和所在城市。
 
 要求：
-1. 只提取具体的地址名称，不要包含其他内容
-2. 每个地址占一行
-3. 如果没有找到地址，返回空列表
-4. 不要添加编号或标记，直接输出地址名称
+1. 返回JSON格式
+2. "city"字段为城市名称（如北京、上海、广州等）
+3. "addresses"字段为地址列表，每个地址占一个元素
+4. 如果没有找到城市，city字段返回空字符串""
 
-示例输入：
-"我想在北京开一家奶茶店，候选地址：朝阳区三里屯太古里、海淀区五道口地铁站附近、西城区西单大悦城附近"
-
-示例输出：
-朝阳区三里屯太古里
-海淀区五道口地铁站附近
-西城区西单大悦城附近"""
+请以JSON格式返回，格式如下：
+{
+    "city": "北京",
+    "addresses": ["朝阳区三里屯太古里", "海淀区五道口地铁站附近"]
+}"""
         
         messages = [
             {"role": "system", "content": system_prompt},
@@ -117,18 +120,13 @@ class DeepSeekClient:
         response = await self.chat_completion(messages, temperature=0.1)
         
         if not response:
-            return []
+            return [], ""
         
-        addresses = []
-        for line in response.strip().split('\n'):
-            line = line.strip()
-            if line and not line.startswith('#') and not line.startswith('-'):
-                clean_line = re.sub(r'^\d+[\.、]\s*', '', line)
-                clean_line = re.sub(r'^[-*]\s*', '', clean_line)
-                if clean_line:
-                    addresses.append(clean_line)
-        
-        return addresses
+        try:
+            result = json.loads(response)
+            return result.get("addresses", []), result.get("city", "")
+        except json.JSONDecodeError:
+            return [], ""
     
     async def extract_store_info(self, user_input: str) -> Dict[str, Any]:
         """使用DeepSeek提取店铺信息"""

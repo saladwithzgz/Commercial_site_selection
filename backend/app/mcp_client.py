@@ -237,11 +237,11 @@ class MCPServiceManager:
                 return coords
         return {"lng": 116.397428, "lat": 39.90923}
     
-    async def collect_location_data(self, address: str) -> LocationData:
+    async def collect_location_data(self, address: str, city: str = "北京") -> LocationData:
         """采集地址的完整数据"""
-        logger.info(f"开始采集地址数据: {address}")
+        logger.info(f"开始采集地址数据: {address} ({city})")
         
-        coords, data_source = await self.geocode(address)
+        coords, data_source = await self.geocode(address, city)
         
         if coords is None:
             logger.error(f"无法获取坐标: {address}")
@@ -258,7 +258,7 @@ class MCPServiceManager:
         await self._collect_customer_flow_data(location_data)
         await self._collect_facilities_data(location_data)
         
-        logger.info(f"地址数据采集完成: {address} (来源: {data_source})")
+        logger.info(f"地址数据采集完成: {address} ({city}) (来源: {data_source})")
         return location_data
     
     async def _collect_competitor_data(self, location_data: LocationData):
