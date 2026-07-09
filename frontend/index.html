@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>奶茶店选址分析系统</title>
-    <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css" />
-    <!-- ECharts -->
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
     <style>
         * {
@@ -20,147 +18,88 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             color: #333;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* 头部 */
+        /* 顶部标题栏 */
         .header {
-            background: white;
-            padding: 30px;
-            border-radius: 16px;
-            margin-bottom: 24px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 24px 32px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            z-index: 100;
         }
 
         .header h1 {
-            font-size: 28px;
+            font-size: 30px;
             color: #1a1a2e;
             margin-bottom: 8px;
         }
 
         .header p {
-            color: #666;
-            font-size: 14px;
-        }
-
-        /* 输入区域 */
-        .input-section {
-            background: white;
-            padding: 24px;
-            border-radius: 16px;
-            margin-bottom: 24px;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-        }
-
-        .input-wrapper {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
-
-        .input-wrapper textarea {
-            flex: 1;
-            padding: 14px 16px;
-            border: 2px solid #e8ecf1;
-            border-radius: 10px;
-            font-size: 14px;
-            font-family: inherit;
-            resize: vertical;
-            min-height: 80px;
-            transition: border-color 0.3s;
-        }
-
-        .input-wrapper textarea:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        .btn-analyze {
-            padding: 14px 32px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            white-space: nowrap;
-        }
-
-        .btn-analyze:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-analyze:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .examples {
-            color: #888;
-            font-size: 13px;
-        }
-
-        .examples strong {
             color: #555;
+            font-size: 16px;
         }
 
-        /* 加载状态 */
-        .loading {
+        /* 主内容区域 */
+        .main-content {
+            flex: 1;
+            display: flex;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 地图容器 - 始终显示 */
+        .map-wrapper {
+            flex: 1;
+            position: relative;
+            z-index: 1;
+        }
+
+        #map-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* 侧边面板 - 结果展示 */
+        .side-panel {
+            width: 420px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: -2px 0 15px rgba(0, 0, 0, 0.08);
+            overflow-y: auto;
+            z-index: 10;
+            padding: 24px;
             display: none;
-            text-align: center;
-            padding: 40px;
-            color: #666;
         }
 
-        .loading.active {
+        .side-panel.active {
             display: block;
         }
 
-        .spinner {
-            display: inline-block;
-            width: 40px;
-            height: 40px;
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #667eea;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 16px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* 结果区域 */
-        .result-section {
-            display: none;
-        }
-
-        .result-section.active {
-            display: block;
+        .panel-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #1a1a2e;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         /* 推荐卡片 */
         .recommendation-card {
             background: white;
-            padding: 24px;
-            border-radius: 16px;
-            margin-bottom: 24px;
+            padding: 20px;
+            border-radius: 14px;
+            margin-bottom: 20px;
             box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
         }
 
         .recommendation-card h2 {
+            font-size: 18px;
             color: #1a1a2e;
             margin-bottom: 16px;
             display: flex;
@@ -169,15 +108,9 @@
         }
 
         .recommendation-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-        }
-
-        @media (max-width: 768px) {
-            .recommendation-content {
-                grid-template-columns: 1fr;
-            }
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
         }
 
         .rec-item {
@@ -197,89 +130,56 @@
         }
 
         .rec-item h3 {
+            font-size: 16px;
             margin-bottom: 8px;
             color: #1a1a2e;
         }
 
+        .rec-item .address-text {
+            font-size: 15px;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
         .rec-item .score {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: bold;
             color: #667eea;
         }
 
         .rec-item .reason {
-            font-size: 13px;
+            font-size: 15px;
             color: #555;
             margin-top: 8px;
         }
 
-        /* 主内容区域 */
-        .main-content {
-            display: grid;
-            grid-template-columns: 1.5fr 1fr;
-            gap: 24px;
-            margin-bottom: 24px;
-        }
-
-        @media (max-width: 1024px) {
-            .main-content {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .card {
-            background: white;
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-        }
-
-        .card-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 16px;
-            color: #1a1a2e;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        /* 地图 */
-        #map-container {
-            width: 100%;
-            height: 500px;
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid #e8ecf1;
-        }
-
-        /* 评分柱状图 */
+        /* 柱状图 */
         #bar-chart {
             width: 100%;
-            height: 300px;
+            height: 280px;
+            margin-bottom: 20px;
         }
 
-        /* 评分明细表 */
+        /* 评分表 */
         .ranking-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 16px;
         }
 
         .ranking-table th {
             background: #f8f9fc;
-            padding: 12px 16px;
+            padding: 12px 10px;
             text-align: left;
             font-weight: 600;
-            font-size: 13px;
-            color: #666;
+            font-size: 14px;
+            color: #555;
             border-bottom: 2px solid #e8ecf1;
         }
 
         .ranking-table td {
-            padding: 14px 16px;
+            padding: 12px 10px;
             border-bottom: 1px solid #f0f2f5;
-            font-size: 14px;
+            font-size: 15px;
         }
 
         .ranking-table tr:hover {
@@ -290,7 +190,7 @@
             display: inline-block;
             padding: 4px 12px;
             border-radius: 20px;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 600;
         }
 
@@ -299,14 +199,140 @@
         .badge-normal { background: #fff3cd; color: #856404; }
         .badge-bad { background: #f8d7da; color: #721c24; }
 
+        /* 底部输入区域 */
+        .input-section {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(15px);
+            padding: 20px 32px;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .input-wrapper {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 10px;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .input-wrapper textarea {
+            flex: 1;
+            padding: 16px 20px;
+            border: 2px solid #e8ecf1;
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: inherit;
+            resize: none;
+            height: 60px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .input-wrapper textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn-analyze {
+            padding: 16px 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .btn-analyze:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-analyze:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .examples {
+            color: #666;
+            font-size: 15px;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .examples strong {
+            color: #444;
+            font-weight: 600;
+        }
+
+        /* 加载状态 */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .loading-content {
+            background: white;
+            padding: 40px 50px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 48px;
+            height: 48px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 16px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 16px;
+            color: #555;
+        }
+
         /* 错误提示 */
         .error-message {
             display: none;
             background: #f8d7da;
             color: #721c24;
-            padding: 16px;
+            padding: 16px 20px;
             border-radius: 10px;
-            margin-bottom: 24px;
+            margin-bottom: 12px;
+            font-size: 15px;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .error-message.active {
@@ -320,87 +346,144 @@
             background: #e8ecf1;
             color: #555;
             border-radius: 20px;
-            font-size: 12px;
+            font-size: 13px;
             margin-left: 8px;
+        }
+
+        /* 空状态提示 */
+        .empty-state {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .empty-state h3 {
+            font-size: 24px;
+            margin-bottom: 12px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .empty-state p {
+            font-size: 16px;
+            opacity: 0.9;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 响应式 */
+        @media (max-width: 900px) {
+            .side-panel {
+                width: 100%;
+                position: fixed;
+                bottom: 160px;
+                top: 80px;
+            }
+
+            .header {
+                padding: 16px 20px;
+            }
+
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .header p {
+                font-size: 14px;
+            }
+
+            .input-section {
+                padding: 16px 16px;
+            }
+
+            .input-wrapper {
+                flex-direction: column;
+            }
+
+            .input-wrapper textarea {
+                height: 80px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- 头部 -->
-        <div class="header">
-            <h1>🍵 奶茶店智能选址分析系统</h1>
-            <p>基于MCP地图服务 · 多维度科学评分 · 可视化决策支持</p>
-        </div>
+    <!-- 顶部标题栏 -->
+    <div class="header">
+        <h1>🍵 奶茶店智能选址分析系统</h1>
+        <p>基于MCP地图服务 · 多维度科学评分 · 可视化决策支持</p>
+    </div>
 
-        <!-- 输入区域 -->
-        <div class="input-section">
-            <div class="input-wrapper">
-                <textarea id="query-input" placeholder="请输入您的选址需求，例如：&#10;我想在北京开一家奶茶店，候选地址：&#10;- 朝阳区三里屯太古里&#10;- 海淀区五道口地铁站附近&#10;- 西城区西单大悦城附近"></textarea>
-                <button class="btn-analyze" id="btn-analyze" onclick="analyzeLocation()">
-                    🔍 开始分析
-                </button>
-            </div>
-            <div class="examples">
-                <strong>示例：</strong>我想在北京开一家奶茶店，有三个候选地址：朝阳区三里屯太古里、海淀区五道口地铁站附近、西城区西单大悦城附近，请分析哪个位置最好。
+    <!-- 主内容区域 -->
+    <div class="main-content">
+        <!-- 地图容器 -->
+        <div class="map-wrapper">
+            <div id="map-container"></div>
+            <!-- 空状态提示 -->
+            <div class="empty-state" id="empty-state">
+                <h3>📍 北京地图</h3>
+                <p>请在下方输入选址需求，分析结果将在此显示</p>
             </div>
         </div>
 
-        <!-- 加载状态 -->
-        <div class="loading" id="loading">
-            <div class="spinner"></div>
-            <div>正在调用MCP服务进行选址分析...</div>
-        </div>
+        <!-- 侧边面板 -->
+        <div class="side-panel" id="side-panel">
+            <div class="panel-title">
+                📊 分析结果
+                <span class="data-source" id="data-source"></span>
+            </div>
 
-        <!-- 错误提示 -->
-        <div class="error-message" id="error-message"></div>
-
-        <!-- 结果区域 -->
-        <div class="result-section" id="result-section">
             <!-- 推荐结论 -->
             <div class="recommendation-card">
                 <h2>🏆 综合推荐</h2>
-                <div class="recommendation-content" id="recommendation-content">
-                    <!-- 动态生成 -->
-                </div>
+                <div class="recommendation-content" id="recommendation-content"></div>
             </div>
 
-            <!-- 主内容：地图 + 柱状图 -->
-            <div class="main-content">
-                <div class="card">
-                    <div class="card-title">
-                        📍 候选地址分布地图
-                        <span class="data-source" id="data-source"></span>
-                    </div>
-                    <div id="map-container"></div>
-                </div>
-                <div class="card">
-                    <div class="card-title">📊 各地址评分对比</div>
-                    <div id="bar-chart"></div>
-                </div>
-            </div>
+            <!-- 柱状图 -->
+            <div class="panel-title" style="font-size:18px;">📈 评分对比</div>
+            <div id="bar-chart"></div>
 
             <!-- 评分明细表 -->
-            <div class="card">
-                <div class="card-title">📋 评分明细表</div>
-                <div style="overflow-x: auto;">
-                    <table class="ranking-table">
-                        <thead>
-                            <tr>
-                                <th>排名</th>
-                                <th>候选地址</th>
-                                <th>竞品密度</th>
-                                <th>交通便利</th>
-                                <th>客流来源</th>
-                                <th>周边配套</th>
-                                <th>总分</th>
-                                <th>评级</th>
-                            </tr>
-                        </thead>
-                        <tbody id="table-body"></tbody>
-                    </table>
-                </div>
+            <div class="panel-title" style="font-size:18px;">📋 评分明细</div>
+            <div style="overflow-x: auto;">
+                <table class="ranking-table">
+                    <thead>
+                        <tr>
+                            <th>排名</th>
+                            <th>地址</th>
+                            <th>总分</th>
+                            <th>评级</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body"></tbody>
+                </table>
             </div>
+        </div>
+    </div>
+
+    <!-- 底部输入区域 -->
+    <div class="input-section">
+        <!-- 错误提示 -->
+        <div class="error-message" id="error-message"></div>
+        
+        <div class="input-wrapper">
+            <textarea id="query-input" placeholder="请输入您的选址需求，例如：我想在北京开一家奶茶店，候选地址：朝阳区三里屯太古里、海淀区五道口地铁站附近、西城区西单大悦城附近"></textarea>
+            <button class="btn-analyze" id="btn-analyze" onclick="analyzeLocation()">
+                🔍 开始分析
+            </button>
+        </div>
+        <div class="examples">
+            <strong>示例：</strong>我想在北京开一家奶茶店，有三个候选地址：朝阳区三里屯太古里、海淀区五道口地铁站附近、西城区西单大悦城附近，请分析哪个位置最好。
+        </div>
+    </div>
+
+    <!-- 加载遮罩 -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <div class="loading-text">正在调用MCP服务进行选址分析...</div>
         </div>
     </div>
 
@@ -409,6 +492,19 @@
     <script>
         let map = null;
         let markers = [];
+
+        // 页面加载完成后初始化地图
+        window.addEventListener('DOMContentLoaded', () => {
+            initEmptyMap();
+        });
+
+        // 初始化空地图
+        function initEmptyMap() {
+            map = L.map('map-container').setView([39.9, 116.4], 11);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+        }
 
         // 调用后端API进行分析
         async function analyzeLocation() {
@@ -420,17 +516,13 @@
                 return;
             }
 
-            // 显示加载状态
             showLoading(true);
             hideError();
-            hideResults();
 
             try {
                 const response = await fetch('/api/analyze', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ query: query })
                 });
 
@@ -441,7 +533,6 @@
                     return;
                 }
 
-                // 显示结果
                 displayResults(data);
 
             } catch (error) {
@@ -454,7 +545,7 @@
 
         // 显示加载状态
         function showLoading(show) {
-            document.getElementById('loading').classList.toggle('active', show);
+            document.getElementById('loading-overlay').classList.toggle('active', show);
             document.getElementById('btn-analyze').disabled = show;
         }
 
@@ -469,10 +560,6 @@
             document.getElementById('error-message').classList.remove('active');
         }
 
-        function hideResults() {
-            document.getElementById('result-section').classList.remove('active');
-        }
-
         // 显示分析结果
         function displayResults(data) {
             const results = data.results || [];
@@ -481,24 +568,91 @@
                 return;
             }
 
-            // 显示结果区域
-            document.getElementById('result-section').classList.add('active');
+            // 隐藏空状态
+            document.getElementById('empty-state').style.display = 'none';
+
+            // 显示侧边面板
+            document.getElementById('side-panel').classList.add('active');
 
             // 显示数据来源
             const dataSource = data.analysis_metadata?.data_source || '未知';
-            document.getElementById('data-source').textContent = '📡 数据来源: ' + dataSource;
+            document.getElementById('data-source').textContent = '📡 ' + dataSource;
+
+            // 更新地图
+            updateMap(results);
 
             // 显示推荐结论
             displayRecommendation(data.recommendation);
-
-            // 初始化地图
-            initMap(results);
 
             // 初始化柱状图
             initBarChart(results);
 
             // 渲染评分表
             renderTable(results);
+        }
+
+        // 更新地图
+        function updateMap(results) {
+            // 清除旧标记
+            markers.forEach(m => map.removeLayer(m));
+            markers = [];
+
+            const colorMap = {
+                '强烈推荐': '#00b894',
+                '推荐': '#0984e3',
+                '一般': '#fdcb6e',
+                '不推荐': '#d63031'
+            };
+
+            const points = [];
+            results.forEach(result => {
+                const lat = result.coordinates.lat;
+                const lng = result.coordinates.lng;
+                points.push([lat, lng]);
+
+                const color = colorMap[result.rating] || '#636e72';
+
+                const icon = L.divIcon({
+                    className: 'custom-marker',
+                    html: `<div style="background:${color};color:white;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:16px;border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.3);">${result.rank}</div>`,
+                    iconSize: [36, 36],
+                    iconAnchor: [18, 18]
+                });
+
+                const marker = L.marker([lat, lng], { icon: icon }).addTo(map);
+                markers.push(marker);
+
+                const popupContent = `
+                    <div style="min-width:280px;font-family:sans-serif;">
+                        <h4 style="margin:0 0 12px;font-size:16px;color:#1a1a2e;">${result.address}</h4>
+                        <div style="margin-bottom:12px;">
+                            <span style="font-size:28px;font-weight:bold;color:${color};">${result.total_score}</span>
+                            <span style="color:#666;font-size:14px;">/100分</span>
+                            <span style="display:inline-block;padding:2px 10px;background:${color}20;color:${color};border-radius:12px;font-size:13px;margin-left:10px;">${result.rating}</span>
+                        </div>
+                        <table style="width:100%;font-size:14px;border-collapse:collapse;">
+                            <tr><td style="padding:5px 0;">🏪 竞品密度:</td><td style="text-align:right;">${result.scores.competitor_density}/30</td></tr>
+                            <tr><td style="padding:5px 0;">🚇 交通便利:</td><td style="text-align:right;">${result.scores.transportation}/25</td></tr>
+                            <tr><td style="padding:5px 0;">👥 客流来源:</td><td style="text-align:right;">${result.scores.customer_flow}/25</td></tr>
+                            <tr><td style="padding:5px 0;">🏪 周边配套:</td><td style="text-align:right;">${result.scores.surrounding_facilities}/20</td></tr>
+                        </table>
+                        <hr style="margin:10px 0;border:none;border-top:1px solid #eee;">
+                        <div style="font-size:13px;color:#555;line-height:2;">
+                            <div>🥤 竞品数量：${result.details.competitor_count}家</div>
+                            <div>🚇 最近地铁：${result.details.nearest_metro} (${result.details.metro_distance}米)</div>
+                            <div>🏢 写字楼：${result.details.office_count}栋</div>
+                            <div>🎓 学校：${result.details.school_count}所</div>
+                            <div>🛍️ 商场：${result.details.mall_count}个</div>
+                        </div>
+                    </div>
+                `;
+                marker.bindPopup(popupContent);
+            });
+
+            if (points.length > 0) {
+                const bounds = L.latLngBounds(points);
+                map.fitBounds(bounds, { padding: [60, 60] });
+            }
         }
 
         // 显示推荐结论
@@ -511,8 +665,8 @@
                 html += `
                     <div class="rec-item primary">
                         <h3>🥇 首选推荐</h3>
-                        <div>${p.address}</div>
-                        <div class="score">${p.score}分 <span style="font-size:14px;color:#666;">(${p.rating})</span></div>
+                        <div class="address-text">${p.address}</div>
+                        <div class="score">${p.score}分 <span style="font-size:16px;color:#666;">(${p.rating})</span></div>
                         <div class="reason">💡 ${p.reason}</div>
                     </div>
                 `;
@@ -523,8 +677,8 @@
                 html += `
                     <div class="rec-item secondary">
                         <h3>🥈 备选方案</h3>
-                        <div>${s.address}</div>
-                        <div class="score">${s.score}分 <span style="font-size:14px;color:#666;">(${s.rating})</span></div>
+                        <div class="address-text">${s.address}</div>
+                        <div class="score">${s.score}分 <span style="font-size:16px;color:#666;">(${s.rating})</span></div>
                         <div class="reason">📊 ${s.difference}</div>
                     </div>
                 `;
@@ -533,89 +687,13 @@
             container.innerHTML = html;
         }
 
-        // 初始化地图
-        function initMap(results) {
-            // 清除旧标记
-            if (map) {
-                markers.forEach(m => map.removeLayer(m));
-                markers = [];
-            } else {
-                map = L.map('map-container').setView([39.9, 116.4], 12);
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '© OpenStreetMap contributors'
-                }).addTo(map);
-            }
-
-            // 评级颜色映射
-            const colorMap = {
-                '强烈推荐': '#00b894',
-                '推荐': '#0984e3',
-                '一般': '#fdcb6e',
-                '不推荐': '#d63031'
-            };
-
-            // 添加标记
-            const points = [];
-            results.forEach(result => {
-                const lat = result.coordinates.lat;
-                const lng = result.coordinates.lng;
-                points.push([lat, lng]);
-
-                const color = colorMap[result.rating] || '#636e72';
-
-                // 创建自定义图标
-                const icon = L.divIcon({
-                    className: 'custom-marker',
-                    html: `<div style="background:${color};color:white;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;border:3px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.3);">${result.rank}</div>`,
-                    iconSize: [32, 32],
-                    iconAnchor: [16, 16]
-                });
-
-                const marker = L.marker([lat, lng], { icon: icon }).addTo(map);
-                markers.push(marker);
-
-                // 弹出窗口内容
-                const popupContent = `
-                    <div style="min-width:250px;font-family:sans-serif;">
-                        <h4 style="margin:0 0 10px;color:#1a1a2e;">${result.address}</h4>
-                        <div style="margin-bottom:10px;">
-                            <span style="font-size:24px;font-weight:bold;color:${color};">${result.total_score}</span>
-                            <span style="color:#666;">/100分</span>
-                            <span style="display:inline-block;padding:2px 8px;background:${color}20;color:${color};border-radius:12px;font-size:12px;margin-left:8px;">${result.rating}</span>
-                        </div>
-                        <table style="width:100%;font-size:12px;border-collapse:collapse;">
-                            <tr><td style="padding:4px 0;">🏪 竞品密度:</td><td style="text-align:right;">${result.scores.competitor_density}/30</td></tr>
-                            <tr><td style="padding:4px 0;">🚇 交通便利:</td><td style="text-align:right;">${result.scores.transportation}/25</td></tr>
-                            <tr><td style="padding:4px 0;">👥 客流来源:</td><td style="text-align:right;">${result.scores.customer_flow}/25</td></tr>
-                            <tr><td style="padding:4px 0;">🏪 周边配套:</td><td style="text-align:right;">${result.scores.surrounding_facilities}/20</td></tr>
-                        </table>
-                        <hr style="margin:8px 0;border:none;border-top:1px solid #eee;">
-                        <div style="font-size:11px;color:#666;line-height:1.8;">
-                            <div>🥤 竞品数量：${result.details.competitor_count}家</div>
-                            <div>🚇 最近地铁：${result.details.nearest_metro} (${result.details.metro_distance}米)</div>
-                            <div>🏢 写字楼：${result.details.office_count}栋</div>
-                            <div>🎓 学校：${result.details.school_count}所</div>
-                            <div>🛍️ 商场：${result.details.mall_count}个</div>
-                        </div>
-                    </div>
-                `;
-                marker.bindPopup(popupContent);
-            });
-
-            // 自动调整地图视野
-            if (points.length > 0) {
-                const bounds = L.latLngBounds(points);
-                map.fitBounds(bounds, { padding: [50, 50] });
-            }
-        }
-
         // 初始化评分柱状图
         function initBarChart(results) {
             const chartDom = document.getElementById('bar-chart');
             const myChart = echarts.init(chartDom);
 
             const addresses = results.map(r => {
-                return r.address.length > 12 ? r.address.substring(0, 10) + '...' : r.address;
+                return r.address.length > 15 ? r.address.substring(0, 13) + '...' : r.address;
             });
 
             const colorMap = {
@@ -638,9 +716,9 @@
                     }
                 },
                 grid: {
-                    left: '3%',
-                    right: '8%',
-                    bottom: '15%',
+                    left: '5%',
+                    right: '5%',
+                    bottom: '20%',
                     top: '10%',
                     containLabel: true
                 },
@@ -648,8 +726,8 @@
                     type: 'category',
                     data: addresses,
                     axisLabel: {
-                        fontSize: 11,
-                        rotate: 20
+                        fontSize: 13,
+                        rotate: 25
                     }
                 },
                 yAxis: {
@@ -657,6 +735,7 @@
                     min: 0,
                     max: 100,
                     axisLabel: {
+                        fontSize: 13,
                         formatter: '{value}分'
                     }
                 },
@@ -665,16 +744,16 @@
                         value: r.total_score,
                         itemStyle: {
                             color: colorMap[r.rating] || '#636e72',
-                            borderRadius: [6, 6, 0, 0]
+                            borderRadius: [8, 8, 0, 0]
                         }
                     })),
                     type: 'bar',
-                    barWidth: '50%',
+                    barWidth: '45%',
                     label: {
                         show: true,
                         position: 'top',
                         formatter: '{c}分',
-                        fontSize: 13,
+                        fontSize: 14,
                         fontWeight: 'bold'
                     }
                 }]
@@ -696,12 +775,8 @@
 
             tbody.innerHTML = results.map(r => `
                 <tr>
-                    <td><strong style="color:#667eea;">#${r.rank}</strong></td>
+                    <td><strong style="color:#667eea;font-size:16px;">#${r.rank}</strong></td>
                     <td>${r.address}</td>
-                    <td>${r.scores.competitor_density}/30</td>
-                    <td>${r.scores.transportation}/25</td>
-                    <td>${r.scores.customer_flow}/25</td>
-                    <td>${r.scores.surrounding_facilities}/20</td>
                     <td><strong style="font-size:16px;">${r.total_score}</strong></td>
                     <td><span class="badge ${badgeClass[r.rating] || 'badge-normal'}">${r.rating}</span></td>
                 </tr>
