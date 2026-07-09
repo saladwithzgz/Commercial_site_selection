@@ -1,11 +1,21 @@
 """
 DeepSeek API客户端模块
 封装DeepSeek大模型API的调用逻辑
+支持从.env文件读取配置
 """
 import json
 import logging
 import os
 from typing import Dict, Any, List, Optional
+
+# 尝试加载.env文件
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    logger = logging.getLogger(__name__)
+    logger.info("已加载.env配置文件")
+except ImportError:
+    pass
 
 # 配置日志
 logging.basicConfig(level=logging.INFO)
@@ -15,21 +25,38 @@ logger = logging.getLogger(__name__)
 class DeepSeekClient:
     """DeepSeek API客户端"""
     
-    def __init__(self, api_key: str = None, model: str = "deepseek-chat"):
+    def __init__(self, api_key: str = None, model: str = None, base_url: str = None):
         self.api_key = api_key or os.environ.get("DEEPSEEK_API_KEY")
-        self.model = model
-        self.base_url = "https://api.deepseek.com/v1"
+        self.model = model or os.environ.get("DEEPSEEK_MODEL", "deepseek-chat")
+        self.base_url = base_url or os.environ.get("DEEPSEEK_BASE_URL", "https://api.deepseek.com/v1")
+        self.timeout = int(os.environ.get("DEEPSEEK_TIMEOUT", 30))
+        self.temperature = float(os.environ.get("DEEPSEEK_TEMPERATURE", 0.7))
+        self.max_tokens = int(os.environ.get("DEEPSEEK_MAX_TOKENS", 4000))
+        
         self.headers = {
             "Content-Type": "application/json",
             "Authorization": f"Bearer {self.api_key}" if self.api_key else ""
         }
         
         if not self.api_key:
-            logger.warning("未配置DeepSeek API密钥，请设置环境变量DEEPSEEK_API_KEY")
+            logger.warning("未配置DeepSeek API密钥，请设置环境变量DEEPSEEK_API_KEY或在.env文件中配置")
+        else:
+            logger.info(f"DeepSeek客户端已初始化，模型: {self.model}")
     
     def is_configured(self) -> bool:
         """检查API密钥是否已配置"""
         return bool(self.api_key)
+    
+    def get_config_info(self) -> Dict[str, Any]:
+        """获取当前配置信息（不包含密钥）"""
+        return {
+            "model": self.model,
+            "base_url": self.base_url,
+            "timeout": self.timeout,
+            "temperature": self.temperature,
+            "max_tokens": self.max_tokens,
+            "configured": self.is_configured()
+        }
     
     async def chat_completion(self, messages: List[Dict[str, str]], **kwargs) -> Optional[str]:
         """调用DeepSeek聊天完成API"""
@@ -42,13 +69,13 @@ class DeepSeekClient:
         payload = {
             "model": self.model,
             "messages": messages,
-            "temperature": kwargs.get("temperature", 0.7),
-            "max_tokens": kwargs.get("max_tokens", 4000)
+            "temperature": kwargs.get("temperature", self.temperature),
+            "max_tokens": kwargs.get("max_tokens", self.max_tokens)
         }
         
         try:
             import aiohttp
-            async with aiohttp.ClientSession() as session:
+            async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=self.timeout)) as session:
                 async with session.post(url, headers=self.headers, json=payload) as response:
                     if response.status != 200:
                         error_text = await response.text()
@@ -96,7 +123,6 @@ class DeepSeekClient:
         for line in response.strip().split('\n'):
             line = line.strip()
             if line and not line.startswith('#') and not line.startswith('-'):
-                # 去除可能的编号前缀
                 clean_line = re.sub(r'^\d+[\.、]\s*', '', line)
                 clean_line = re.sub(r'^[-*]\s*', '', clean_line)
                 if clean_line:
@@ -137,5 +163,4 @@ class DeepSeekClient:
             return {"store_type": "奶茶店", "brand_positioning": None}
 
 
-# 添加re导入（之前遗漏了）
 import re
