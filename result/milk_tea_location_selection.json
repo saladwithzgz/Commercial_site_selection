@@ -1,0 +1,177 @@
+{
+  "analysis_metadata": {
+    "timestamp": "2026-07-09T03:59:21.718361",
+    "store_type": "奶茶店",
+    "total_candidates": 4,
+    "data_source": "高德地图MCP"
+  },
+  "results": [
+    {
+      "address": "海淀区五道口地铁站附近",
+      "coordinates": {
+        "lng": 116.337742,
+        "lat": 39.992894
+      },
+      "scores": {
+        "competitor_density": 0,
+        "transportation": 25,
+        "customer_flow": 25,
+        "surrounding_facilities": 20,
+        "total_score": 70,
+        "rating": "推荐"
+      },
+      "total_score": 70,
+      "rating": "推荐",
+      "details": {
+        "competitor_count": 18,
+        "competitor_list": [
+          "CoCo都可",
+          "蜜雪冰城",
+          "茶百道",
+          "喜茶",
+          "霸王茶姬"
+        ],
+        "nearest_metro": "五道口站",
+        "metro_distance": 50,
+        "office_count": 20,
+        "office_list": [
+          "东源大厦",
+          "优盛大厦"
+        ],
+        "school_count": 5,
+        "school_list": [
+          "清华大学",
+          "北京大学"
+        ],
+        "mall_count": 2,
+        "mall_list": [
+          "五道口购物中心"
+        ],
+        "has_convenience_store": true,
+        "is_restaurant_zone": true
+      },
+      "data_source": "高德地图MCP",
+      "rank": 1
+    },
+    {
+      "address": "朝阳区三里屯太古里",
+      "coordinates": {
+        "lng": 116.45399,
+        "lat": 39.934871
+      },
+      "scores": {
+        "competitor_density": 0,
+        "transportation": 20,
+        "customer_flow": 15,
+        "surrounding_facilities": 20,
+        "total_score": 55,
+        "rating": "一般"
+      },
+      "total_score": 55,
+      "rating": "一般",
+      "details": {
+        "competitor_count": 20,
+        "competitor_list": [
+          "阿嬷手作",
+          "喜茶",
+          "1点点",
+          "茶百道",
+          "蜜雪冰城"
+        ],
+        "nearest_metro": "工人体育场站",
+        "metro_distance": 300,
+        "office_count": 8,
+        "office_list": [
+          "三里屯SOHO"
+        ],
+        "school_count": 0,
+        "school_list": [],
+        "mall_count": 3,
+        "mall_list": [
+          "三里屯太古里"
+        ],
+        "has_convenience_store": true,
+        "is_restaurant_zone": true
+      },
+      "data_source": "高德地图MCP",
+      "rank": 2
+    },
+    {
+      "address": "北京开一家奶茶店",
+      "coordinates": {
+        "lng": 116.397428,
+        "lat": 39.90923
+      },
+      "scores": {
+        "competitor_density": 30,
+        "transportation": 25,
+        "customer_flow": 0,
+        "surrounding_facilities": 0,
+        "total_score": 55,
+        "rating": "一般"
+      },
+      "total_score": 55,
+      "rating": "一般",
+      "details": {
+        "competitor_count": 0,
+        "competitor_list": [],
+        "nearest_metro": "",
+        "metro_distance": 0,
+        "office_count": 0,
+        "office_list": [],
+        "school_count": 0,
+        "school_list": [],
+        "mall_count": 0,
+        "mall_list": [],
+        "has_convenience_store": false,
+        "is_restaurant_zone": false
+      },
+      "data_source": "预设规则",
+      "rank": 3
+    },
+    {
+      "address": "西城区西单大悦城附近",
+      "coordinates": {
+        "lng": 116.37296,
+        "lat": 39.910884
+      },
+      "scores": {
+        "competitor_density": 0,
+        "transportation": 25,
+        "customer_flow": 15,
+        "surrounding_facilities": 10,
+        "total_score": 50,
+        "rating": "不推荐"
+      },
+      "total_score": 50,
+      "rating": "不推荐",
+      "details": {
+        "competitor_count": 21,
+        "competitor_list": [
+          "奈雪的茶",
+          "乐乐茶",
+          "兰熊鲜奶",
+          "喜茶",
+          "蜜雪冰城"
+        ],
+        "nearest_metro": "西单站",
+        "metro_distance": 100,
+        "office_count": 3,
+        "office_list": [
+          "通港大厦"
+        ],
+        "school_count": 0,
+        "school_list": [],
+        "mall_count": 5,
+        "mall_list": [
+          "西单大悦城",
+          "君太百货"
+        ],
+        "has_convenience_store": true,
+        "is_restaurant_zone": false
+      },
+      "data_source": "高德地图MCP",
+      "rank": 4
+    }
+  ]
+}

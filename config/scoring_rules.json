@@ -1,0 +1,40 @@
+{
+  "dimensions": {
+    "竞品密度": {
+      "weight": 30,
+      "rules": [
+        {"range": [0, 1], "score": 30, "desc": "500米内0~1家"},
+        {"range": [2, 3], "score": 20, "desc": "500米内2~3家"},
+        {"range": [4, 5], "score": 10, "desc": "500米内4~5家"},
+        {"range": [6, null], "score": 0, "desc": "500米内6家以上"}
+      ]
+    },
+    "交通便利性": {
+      "weight": 25,
+      "rules": [
+        {"range": [0, 200], "score": 25, "desc": "最近地铁站≤200米"},
+        {"range": [201, 500], "score": 20, "desc": "200~500米"},
+        {"range": [501, 1000], "score": 10, "desc": "500~1000米"},
+        {"range": [1001, null], "score": 5, "desc": "1000米以上"}
+      ]
+    },
+    "客流来源": {
+      "weight": 25,
+      "has_office_mall": 15,
+      "has_school": 10,
+      "max_score": 25
+    },
+    "周边配套": {
+      "weight": 20,
+      "has_restaurant_zone": 10,
+      "has_convenience_store": 10
+    }
+  },
+  "ratings": [
+    {"min": 85, "label": "强烈推荐"},
+    {"min": 70, "label": "推荐"},
+    {"min": 55, "label": "一般"},
+    {"max": 54, "label": "不推荐"}
+  ],
+  "notes": "评分仅供参考，实际选址需综合考虑租金、面积、合同等因素。"
+}

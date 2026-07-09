@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_f8d63170731808ea7afc800461f14d82 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_f8d63170731808ea7afc800461f14d82" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_f8d63170731808ea7afc800461f14d82 = L.map(
+                "map_f8d63170731808ea7afc800461f14d82",
+                {
+                    center: [39.9411, 116.38190000000002],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 12,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_ca117e4622896995bc0bfe5c0e0c418e = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_ca117e4622896995bc0bfe5c0e0c418e.addTo(map_f8d63170731808ea7afc800461f14d82);
+        
+    
+            var marker_fbae32efbdc5c3671141a891f7f4119c = L.marker(
+                [39.9655, 116.3054],
+                {
+}
+            ).addTo(map_f8d63170731808ea7afc800461f14d82);
+        
+    
+            var icon_d88209f11843a87aba8b7781665ef036 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_d15c15e7fc33b42e2c415dda919f6205 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_09b3343b290c1c7c85d6af2b18c06732 = $(`<div id="html_09b3343b290c1c7c85d6af2b18c06732" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; min-width: 250px;">         <h4 style="margin: 0 0 10px; color: #333;">北京市海淀区五道口地铁站附近</h4>          <div style="background: green; color: white;               padding: 5px 10px; border-radius: 5px; display: inline-block; margin-bottom: 10px;">             <strong>强烈推荐</strong> - 90分         </div>          <table style="width: 100%; font-size: 12px;">             <tr>                 <td><strong>🏪 竞品密度:</strong></td>                 <td>20/30</td>             </tr>             <tr>                 <td><strong>🚇 交通便利:</strong></td>                 <td>25/25</td>             </tr>             <tr>                 <td><strong>👥 客流来源:</strong></td>                 <td>25/25</td>             </tr>             <tr>                 <td><strong>🏪 周边配套:</strong></td>                 <td>20/20</td>             </tr>         </table>          <hr style="margin: 10px 0;">          <div style="font-size: 11px; color: #666;">             <div>🥤 竞品数量：3家</div>             <div>🚇 最近地铁：五道口站 (150米)</div>             <div>🏢 写字楼：3栋</div>             <div>🎓 学校：5所</div>             <div>🛍️ 商场：2个</div>             <div>🏪 便利店：有</div>             <div>🍽️ 餐饮区：是</div>         </div>     </div>     </div>`)[0];
+                popup_d15c15e7fc33b42e2c415dda919f6205.setContent(html_09b3343b290c1c7c85d6af2b18c06732);
+            
+        
+
+        marker_fbae32efbdc5c3671141a891f7f4119c.bindPopup(popup_d15c15e7fc33b42e2c415dda919f6205)
+        ;
+
+        
+    
+    
+            marker_fbae32efbdc5c3671141a891f7f4119c.bindTooltip(
+                `<div>
+                     #1 北京市海淀区五道口地铁站附近...
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_fbae32efbdc5c3671141a891f7f4119c.setIcon(icon_d88209f11843a87aba8b7781665ef036);
+            
+    
+            var marker_f0d0cd84623d83dce98dfffea9ba2483 = L.marker(
+                [39.9408, 116.461],
+                {
+}
+            ).addTo(map_f8d63170731808ea7afc800461f14d82);
+        
+    
+            var icon_100ea6b0ee53610ef6bc476b6135a8a1 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_a3b6b7c6dd301f6df8c3301a53490c2d = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_b896106bbe9e64bbc17bc572030945e7 = $(`<div id="html_b896106bbe9e64bbc17bc572030945e7" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; min-width: 250px;">         <h4 style="margin: 0 0 10px; color: #333;">北京市朝阳区三里屯太古里</h4>          <div style="background: blue; color: white;               padding: 5px 10px; border-radius: 5px; display: inline-block; margin-bottom: 10px;">             <strong>推荐</strong> - 75分         </div>          <table style="width: 100%; font-size: 12px;">             <tr>                 <td><strong>🏪 竞品密度:</strong></td>                 <td>10/30</td>             </tr>             <tr>                 <td><strong>🚇 交通便利:</strong></td>                 <td>20/25</td>             </tr>             <tr>                 <td><strong>👥 客流来源:</strong></td>                 <td>25/25</td>             </tr>             <tr>                 <td><strong>🏪 周边配套:</strong></td>                 <td>20/20</td>             </tr>         </table>          <hr style="margin: 10px 0;">          <div style="font-size: 11px; color: #666;">             <div>🥤 竞品数量：4家</div>             <div>🚇 最近地铁：团结湖站 (380米)</div>             <div>🏢 写字楼：5栋</div>             <div>🎓 学校：0所</div>             <div>🛍️ 商场：3个</div>             <div>🏪 便利店：有</div>             <div>🍽️ 餐饮区：是</div>         </div>     </div>     </div>`)[0];
+                popup_a3b6b7c6dd301f6df8c3301a53490c2d.setContent(html_b896106bbe9e64bbc17bc572030945e7);
+            
+        
+
+        marker_f0d0cd84623d83dce98dfffea9ba2483.bindPopup(popup_a3b6b7c6dd301f6df8c3301a53490c2d)
+        ;
+
+        
+    
+    
+            marker_f0d0cd84623d83dce98dfffea9ba2483.bindTooltip(
+                `<div>
+                     #2 北京市朝阳区三里屯太古里...
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_f0d0cd84623d83dce98dfffea9ba2483.setIcon(icon_100ea6b0ee53610ef6bc476b6135a8a1);
+            
+    
+            var marker_ed83da327f68c80d0cb9470bc8e27e08 = L.marker(
+                [39.917, 116.3793],
+                {
+}
+            ).addTo(map_f8d63170731808ea7afc800461f14d82);
+        
+    
+            var icon_c6e72fe17a4bc54430b62c5410f0bfdd = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_cc97ad4d5d3f7d24e4a19ac060ff4eeb = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_e8b552a976296c6031c1b69aeb578b27 = $(`<div id="html_e8b552a976296c6031c1b69aeb578b27" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; min-width: 250px;">         <h4 style="margin: 0 0 10px; color: #333;">北京市西城区西单大悦城附近</h4>          <div style="background: orange; color: white;               padding: 5px 10px; border-radius: 5px; display: inline-block; margin-bottom: 10px;">             <strong>一般</strong> - 60分         </div>          <table style="width: 100%; font-size: 12px;">             <tr>                 <td><strong>🏪 竞品密度:</strong></td>                 <td>10/30</td>             </tr>             <tr>                 <td><strong>🚇 交通便利:</strong></td>                 <td>25/25</td>             </tr>             <tr>                 <td><strong>👥 客流来源:</strong></td>                 <td>15/25</td>             </tr>             <tr>                 <td><strong>🏪 周边配套:</strong></td>                 <td>10/20</td>             </tr>         </table>          <hr style="margin: 10px 0;">          <div style="font-size: 11px; color: #666;">             <div>🥤 竞品数量：5家</div>             <div>🚇 最近地铁：西单站 (100米)</div>             <div>🏢 写字楼：2栋</div>             <div>🎓 学校：0所</div>             <div>🛍️ 商场：1个</div>             <div>🏪 便利店：有</div>             <div>🍽️ 餐饮区：否</div>         </div>     </div>     </div>`)[0];
+                popup_cc97ad4d5d3f7d24e4a19ac060ff4eeb.setContent(html_e8b552a976296c6031c1b69aeb578b27);
+            
+        
+
+        marker_ed83da327f68c80d0cb9470bc8e27e08.bindPopup(popup_cc97ad4d5d3f7d24e4a19ac060ff4eeb)
+        ;
+
+        
+    
+    
+            marker_ed83da327f68c80d0cb9470bc8e27e08.bindTooltip(
+                `<div>
+                     #3 北京市西城区西单大悦城附近...
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_ed83da327f68c80d0cb9470bc8e27e08.setIcon(icon_c6e72fe17a4bc54430b62c5410f0bfdd);
+            
+    
+            tile_layer_ca117e4622896995bc0bfe5c0e0c418e.addTo(map_f8d63170731808ea7afc800461f14d82);
+        
+    
+                marker_fbae32efbdc5c3671141a891f7f4119c.setIcon(icon_d88209f11843a87aba8b7781665ef036);
+            
+    
+                marker_f0d0cd84623d83dce98dfffea9ba2483.setIcon(icon_100ea6b0ee53610ef6bc476b6135a8a1);
+            
+    
+                marker_ed83da327f68c80d0cb9470bc8e27e08.setIcon(icon_c6e72fe17a4bc54430b62c5410f0bfdd);
+            
+</script>
+</html>

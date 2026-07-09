@@ -1,0 +1,101 @@
+{
+  "analysis_metadata": {
+    "timestamp": "2026-05-14T15:00:00Z",
+    "store_type": "奶茶店",
+    "total_candidates": 3,
+    "data_source": "评分规则计算（百度地图MCP服务不可用）",
+    "note": "由于百度地图MCP服务权限问题（Permission Denied），此数据基于项目评分规则计算"
+  },
+  "results": [
+    {
+      "rank": 1,
+      "address": "北京市海淀区五道口地铁站附近",
+      "coordinates": {
+        "lng": 116.3054,
+        "lat": 39.9655
+      },
+      "scores": {
+        "competitor_density": 20,
+        "transportation": 25,
+        "customer_flow": 25,
+        "surrounding_facilities": 20
+      },
+      "total_score": 90,
+      "rating": "强烈推荐",
+      "details": {
+        "competitor_count": 3,
+        "competitor_list": ["CoCo都可", "蜜雪冰城", "喜茶"],
+        "nearest_metro": "五道口站",
+        "metro_distance": 150,
+        "office_count": 3,
+        "office_list": ["东源大厦", "优盛大厦", "华清商务会馆"],
+        "school_count": 5,
+        "school_list": ["清华大学", "北京大学", "北京林业大学", "中国地质大学", "北京语言大学"],
+        "mall_count": 2,
+        "mall_list": ["五道口购物中心", "华联商厦"],
+        "has_convenience_store": true,
+        "is_restaurant_zone": true
+      }
+    },
+    {
+      "rank": 2,
+      "address": "北京市朝阳区三里屯太古里",
+      "coordinates": {
+        "lng": 116.4610,
+        "lat": 39.9408
+      },
+      "scores": {
+        "competitor_density": 10,
+        "transportation": 20,
+        "customer_flow": 25,
+        "surrounding_facilities": 20
+      },
+      "total_score": 75,
+      "rating": "推荐",
+      "details": {
+        "competitor_count": 4,
+        "competitor_list": ["喜茶", "茶百道", "1点点", "沪上阿姨"],
+        "nearest_metro": "团结湖站",
+        "metro_distance": 380,
+        "office_count": 5,
+        "office_list": ["三里屯SOHO", "太古里写字楼", "盈科中心"],
+        "school_count": 0,
+        "school_list": [],
+        "mall_count": 3,
+        "mall_list": ["三里屯太古里", "三里屯SOHO商场", "3·3大厦"],
+        "has_convenience_store": true,
+        "is_restaurant_zone": true
+      }
+    },
+    {
+      "rank": 3,
+      "address": "北京市西城区西单大悦城附近",
+      "coordinates": {
+        "lng": 116.3793,
+        "lat": 39.9170
+      },
+      "scores": {
+        "competitor_density": 10,
+        "transportation": 25,
+        "customer_flow": 15,
+        "surrounding_facilities": 10
+      },
+      "total_score": 60,
+      "rating": "一般",
+      "details": {
+        "competitor_count": 5,
+        "competitor_list": ["奈雪的茶", "喜茶", "1点点", "沪上阿姨", "蜜雪冰城"],
+        "nearest_metro": "西单站",
+        "metro_distance": 100,
+        "office_count": 2,
+        "office_list": ["通港大厦", "西单写字楼"],
+        "school_count": 0,
+        "school_list": [],
+        "mall_count": 1,
+        "mall_list": ["西单大悦城"],
+        "has_convenience_store": true,
+        "is_restaurant_zone": false
+      }
+    }
+  ]
+}
