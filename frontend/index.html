@@ -47,12 +47,14 @@
             display: flex;
             position: relative;
             overflow: hidden;
+            min-height: 0;
         }
 
         .map-wrapper {
             flex: 1;
             position: relative;
             z-index: 1;
+            min-height: 0;
         }
 
         #map-container {
@@ -65,16 +67,57 @@
             background: rgba(255, 255, 255, 0.98);
             backdrop-filter: blur(15px);
             box-shadow: -2px 0 20px rgba(0, 0, 0, 0.1);
-            overflow-y: auto;
             z-index: 10;
             display: flex;
             flex-direction: column;
+            flex-shrink: 0;
+            max-height: 100%;
         }
 
         .panel-scroll {
             flex: 1;
             overflow-y: auto;
             padding: 24px;
+            scrollbar-width: thin;
+            scrollbar-color: #667eea #e8ecf1;
+            min-height: 0;
+            position: relative;
+        }
+
+        .panel-scroll::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .panel-scroll::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .panel-scroll::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 4px;
+            border: 2px solid #f1f1f1;
+        }
+
+        .panel-scroll::-webkit-scrollbar-thumb:hover {
+            background: #5a6fd6;
+        }
+
+        .scroll-indicator {
+            position: sticky;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #667eea, transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .panel-scroll:hover .scroll-indicator {
+            opacity: 1;
         }
 
         .panel-title {
@@ -188,6 +231,13 @@
             padding: 14px;
             border-radius: 8px;
             border-left: 4px solid;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .rec-item:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         .rec-item.primary {
@@ -224,15 +274,149 @@
             margin-top: 6px;
         }
 
+        .rec-item .view-detail {
+            font-size: 13px;
+            color: #667eea;
+            margin-top: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
         #bar-chart {
             width: 100%;
             height: 260px;
             margin-bottom: 20px;
         }
 
+        .results-slider {
+            margin-bottom: 20px;
+        }
+
+        .results-slider h3 {
+            font-size: 17px;
+            color: #1a1a2e;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .slider-container {
+            display: flex;
+            overflow-x: auto;
+            gap: 12px;
+            padding-bottom: 12px;
+            scrollbar-width: none;
+            scroll-snap-type: x mandatory;
+        }
+
+        .slider-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .slider-card {
+            flex: 0 0 280px;
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            scroll-snap-align: start;
+            border-left: 4px solid;
+        }
+
+        .slider-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .slider-card.rating-best { border-color: #00b894; }
+        .slider-card.rating-good { border-color: #0984e3; }
+        .slider-card.rating-normal { border-color: #fdcb6e; }
+        .slider-card.rating-bad { border-color: #d63031; }
+
+        .slider-card .rank-badge {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+
+        .slider-card .address {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .slider-card .score-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .slider-card .score {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .slider-card .badge {
+            padding: 4px 10px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .slider-card .stats {
+            font-size: 13px;
+            color: #555;
+            line-height: 1.8;
+        }
+
+        .slider-card .view-detail-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            color: #667eea;
+            font-size: 13px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #f0f2f5;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .slider-nav {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .slider-nav button {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            border: none;
+            background: #ddd;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .slider-nav button.active {
+            background: #667eea;
+            width: 24px;
+            border-radius: 4px;
+        }
+
         .ranking-table {
             width: 100%;
             border-collapse: collapse;
+            margin-bottom: 20px;
         }
 
         .ranking-table th {
@@ -249,9 +433,11 @@
             padding: 10px 8px;
             border-bottom: 1px solid #f0f2f5;
             font-size: 14px;
+            cursor: pointer;
+            transition: background 0.2s;
         }
 
-        .ranking-table tr:hover {
+        .ranking-table tr:hover td {
             background: #f8f9ff;
         }
 
@@ -267,6 +453,219 @@
         .badge-good { background: #d1ecf1; color: #0c5460; }
         .badge-normal { background: #fff3cd; color: #856404; }
         .badge-bad { background: #f8d7da; color: #721c24; }
+
+        .detail-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: flex-end;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .detail-overlay.active {
+            display: flex;
+        }
+
+        .detail-panel {
+            width: 480px;
+            max-width: 100%;
+            height: 100%;
+            background: white;
+            overflow-y: auto;
+            animation: slideIn 0.3s ease-out;
+            scrollbar-width: thin;
+            scrollbar-color: #667eea #e8ecf1;
+        }
+
+        .detail-panel::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .detail-panel::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .detail-panel::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 3px;
+        }
+
+        .detail-panel::-webkit-scrollbar-thumb:hover {
+            background: #5a6fd6;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+
+        .detail-header {
+            padding: 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            position: relative;
+        }
+
+        .detail-header .close-btn {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .detail-header .close-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .detail-header .rank {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .detail-header .address {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .detail-header .score-row {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+        }
+
+        .detail-header .score {
+            font-size: 36px;
+            font-weight: bold;
+        }
+
+        .detail-header .rating {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .detail-content {
+            padding: 24px;
+        }
+
+        .detail-section {
+            margin-bottom: 24px;
+        }
+
+        .detail-section h3 {
+            font-size: 16px;
+            color: #1a1a2e;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .score-breakdown {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .score-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .score-item .label {
+            width: 100px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .score-item .bar-container {
+            flex: 1;
+            height: 24px;
+            background: #f0f2f5;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .score-item .bar {
+            height: 100%;
+            border-radius: 12px;
+            transition: width 0.6s ease;
+        }
+
+        .score-item .bar.competitor { background: linear-gradient(90deg, #fdcb6e, #f39c12); }
+        .score-item .bar.transport { background: linear-gradient(90deg, #74b9ff, #0984e3); }
+        .score-item .bar.customer { background: linear-gradient(90deg, #81ecec, #00cec9); }
+        .score-item .bar.surrounding { background: linear-gradient(90deg, #a29bfe, #6c5ce7); }
+
+        .score-item .value {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 13px;
+            font-weight: 600;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .detail-section .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .stat-card {
+            background: #f8f9fc;
+            padding: 16px;
+            border-radius: 10px;
+        }
+
+        .stat-card .label {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .stat-card .value {
+            font-size: 22px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .detail-section .reason-box {
+            background: #f0fdf4;
+            padding: 16px;
+            border-radius: 10px;
+            border-left: 4px solid #00b894;
+        }
+
+        .detail-section .reason-box p {
+            font-size: 14px;
+            color: #1a1a2e;
+            line-height: 1.6;
+        }
 
         .loading-overlay {
             position: fixed;
@@ -395,6 +794,10 @@
             .header p {
                 font-size: 13px;
             }
+
+            .detail-panel {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -427,6 +830,7 @@
             </div>
 
             <div class="panel-scroll">
+                <div class="scroll-indicator"></div>
                 <div class="result-content" id="result-content">
                     <div class="panel-title">
                         📊 分析结果
@@ -436,6 +840,12 @@
                     <div class="recommendation-card">
                         <h2>🏆 综合推荐</h2>
                         <div class="recommendation-content" id="recommendation-content"></div>
+                    </div>
+
+                    <div class="results-slider">
+                        <h3>📋 候选地址对比</h3>
+                        <div class="slider-container" id="slider-container"></div>
+                        <div class="slider-nav" id="slider-nav"></div>
                     </div>
 
                     <div class="panel-title" style="font-size:18px;">📈 评分对比</div>
@@ -464,6 +874,34 @@
         </div>
     </div>
 
+    <div class="detail-overlay" id="detail-overlay" onclick="closeDetail()">
+        <div class="detail-panel" onclick="event.stopPropagation()">
+            <div class="detail-header">
+                <button class="close-btn" onclick="closeDetail()">×</button>
+                <div class="rank" id="detail-rank">🥇</div>
+                <div class="address" id="detail-address"></div>
+                <div class="score-row">
+                    <span class="score" id="detail-score"></span>
+                    <span class="rating" id="detail-rating"></span>
+                </div>
+            </div>
+            <div class="detail-content">
+                <div class="detail-section">
+                    <h3>📊 评分详情</h3>
+                    <div class="score-breakdown" id="detail-score-breakdown"></div>
+                </div>
+                <div class="detail-section">
+                    <h3>📈 周边数据</h3>
+                    <div class="stats-grid" id="detail-stats"></div>
+                </div>
+                <div class="detail-section">
+                    <h3>💡 推荐理由</h3>
+                    <div class="reason-box" id="detail-reason"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="loading-overlay" id="loading-overlay">
         <div class="loading-content">
             <div class="spinner"></div>
@@ -475,6 +913,7 @@
     <script>
         let map = null;
         let markers = [];
+        let currentResults = [];
 
         window.addEventListener('DOMContentLoaded', () => {
             initEmptyMap();
@@ -545,6 +984,8 @@
                 return;
             }
 
+            currentResults = results;
+
             document.getElementById('empty-state').style.display = 'none';
             document.getElementById('initial-hint').style.display = 'none';
             document.getElementById('result-content').classList.add('active');
@@ -554,6 +995,7 @@
 
             updateMap(results);
             displayRecommendation(data.recommendation);
+            renderSlider(results);
             initBarChart(results);
             renderTable(results);
         }
@@ -627,11 +1069,12 @@
             if (recommendation.primary) {
                 const p = recommendation.primary;
                 html += `
-                    <div class="rec-item primary">
+                    <div class="rec-item primary" onclick="showDetail(${p.score === currentResults[0].total_score ? 0 : findResultIndex(p.address)})">
                         <h3>🥇 首选推荐</h3>
                         <div class="address-text">${p.address}</div>
                         <div class="score">${p.score}分 <span style="font-size:15px;color:#666;">(${p.rating})</span></div>
                         <div class="reason">💡 ${p.reason}</div>
+                        <div class="view-detail">👁️ 查看详情 →</div>
                     </div>
                 `;
             }
@@ -639,16 +1082,196 @@
             if (recommendation.secondary) {
                 const s = recommendation.secondary;
                 html += `
-                    <div class="rec-item secondary">
+                    <div class="rec-item secondary" onclick="showDetail(${findResultIndex(s.address)})">
                         <h3>🥈 备选方案</h3>
                         <div class="address-text">${s.address}</div>
                         <div class="score">${s.score}分 <span style="font-size:15px;color:#666;">(${s.rating})</span></div>
                         <div class="reason">📊 ${s.difference}</div>
+                        <div class="view-detail">👁️ 查看详情 →</div>
                     </div>
                 `;
             }
 
             container.innerHTML = html;
+        }
+
+        function findResultIndex(address) {
+            return currentResults.findIndex(r => r.address.includes(address) || address.includes(r.address));
+        }
+
+        function renderSlider(results) {
+            const container = document.getElementById('slider-container');
+            const nav = document.getElementById('slider-nav');
+
+            const colorMap = {
+                '强烈推荐': '#00b894',
+                '推荐': '#0984e3',
+                '一般': '#fdcb6e',
+                '不推荐': '#d63031'
+            };
+
+            const badgeClassMap = {
+                '强烈推荐': 'badge-best',
+                '推荐': 'badge-good',
+                '一般': 'badge-normal',
+                '不推荐': 'badge-bad'
+            };
+
+            const ratingClassMap = {
+                '强烈推荐': 'rating-best',
+                '推荐': 'rating-good',
+                '一般': 'rating-normal',
+                '不推荐': 'rating-bad'
+            };
+
+            const rankIcons = ['🥇', '🥈', '🥉', '4', '5', '6', '7', '8', '9', '10'];
+
+            container.innerHTML = results.map((result, index) => {
+                const color = colorMap[result.rating] || '#636e72';
+                return `
+                    <div class="slider-card ${ratingClassMap[result.rating] || 'rating-normal'}" onclick="showDetail(${index})">
+                        <div class="rank-badge">${rankIcons[index] || (index + 1)}</div>
+                        <div class="address">${result.address}</div>
+                        <div class="score-row">
+                            <span class="score" style="color:${color};">${result.total_score}</span>
+                            <span class="badge ${badgeClassMap[result.rating] || 'badge-normal'}">${result.rating}</span>
+                        </div>
+                        <div class="stats">
+                            <div>🥤 竞品: ${result.details.competitor_count}家</div>
+                            <div>🚇 地铁: ${result.details.metro_distance}米</div>
+                            <div>🏢 写字楼: ${result.details.office_count}栋</div>
+                            <div>🎓 学校: ${result.details.school_count}所</div>
+                        </div>
+                        <div class="view-detail-btn">查看详情 →</div>
+                    </div>
+                `;
+            }).join('');
+
+            nav.innerHTML = results.map((_, index) => 
+                `<button ${index === 0 ? 'class="active"' : ''} onclick="scrollToCard(${index})"></button>`
+            ).join('');
+        }
+
+        function scrollToCard(index) {
+            const container = document.getElementById('slider-container');
+            const cards = container.querySelectorAll('.slider-card');
+            if (cards[index]) {
+                cards[index].scrollIntoView({ behavior: 'smooth', inline: 'center' });
+            }
+            const navButtons = document.querySelectorAll('.slider-nav button');
+            navButtons.forEach((btn, i) => btn.classList.toggle('active', i === index));
+        }
+
+        function showDetail(index) {
+            const result = currentResults[index];
+            if (!result) return;
+
+            const colorMap = {
+                '强烈推荐': '#00b894',
+                '推荐': '#0984e3',
+                '一般': '#fdcb6e',
+                '不推荐': '#d63031'
+            };
+
+            const rankIcons = ['🥇', '🥈', '🥉', '4', '5', '6', '7', '8', '9', '10'];
+            const color = colorMap[result.rating] || '#636e72';
+
+            document.getElementById('detail-rank').textContent = rankIcons[index] || (index + 1);
+            document.getElementById('detail-address').textContent = result.address;
+            document.getElementById('detail-score').textContent = result.total_score + '分';
+            document.getElementById('detail-rating').textContent = result.rating;
+            document.getElementById('detail-rating').style.backgroundColor = color;
+
+            document.getElementById('detail-score-breakdown').innerHTML = `
+                <div class="score-item">
+                    <span class="label">🏪 竞品密度</span>
+                    <div class="bar-container">
+                        <div class="bar competitor" style="width:${(result.scores.competitor_density / 30) * 100}%"></div>
+                        <span class="value">${result.scores.competitor_density}/30</span>
+                    </div>
+                </div>
+                <div class="score-item">
+                    <span class="label">🚇 交通便利</span>
+                    <div class="bar-container">
+                        <div class="bar transport" style="width:${(result.scores.transportation / 25) * 100}%"></div>
+                        <span class="value">${result.scores.transportation}/25</span>
+                    </div>
+                </div>
+                <div class="score-item">
+                    <span class="label">👥 客流来源</span>
+                    <div class="bar-container">
+                        <div class="bar customer" style="width:${(result.scores.customer_flow / 25) * 100}%"></div>
+                        <span class="value">${result.scores.customer_flow}/25</span>
+                    </div>
+                </div>
+                <div class="score-item">
+                    <span class="label">🏪 周边配套</span>
+                    <div class="bar-container">
+                        <div class="bar surrounding" style="width:${(result.scores.surrounding_facilities / 20) * 100}%"></div>
+                        <span class="value">${result.scores.surrounding_facilities}/20</span>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('detail-stats').innerHTML = `
+                <div class="stat-card">
+                    <div class="label">🥤 竞品数量</div>
+                    <div class="value">${result.details.competitor_count}<span style="font-size:14px;font-weight:normal;color:#666;">家</span></div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">🚇 距地铁站</div>
+                    <div class="value">${result.details.metro_distance}<span style="font-size:14px;font-weight:normal;color:#666;">米</span></div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">🏢 写字楼</div>
+                    <div class="value">${result.details.office_count}<span style="font-size:14px;font-weight:normal;color:#666;">栋</span></div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">🎓 学校</div>
+                    <div class="value">${result.details.school_count}<span style="font-size:14px;font-weight:normal;color:#666;">所</span></div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">🛍️ 商场</div>
+                    <div class="value">${result.details.mall_count}<span style="font-size:14px;font-weight:normal;color:#666;">个</span></div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">📍 地铁名称</div>
+                    <div class="value" style="font-size:16px;">${result.details.nearest_metro}</div>
+                </div>
+            `;
+
+            const reason = getRecommendationReason(result);
+            document.getElementById('detail-reason').innerHTML = `<p>${reason}</p>`;
+
+            document.getElementById('detail-overlay').classList.add('active');
+        }
+
+        function closeDetail() {
+            document.getElementById('detail-overlay').classList.remove('active');
+        }
+
+        function getRecommendationReason(result) {
+            const details = result.details;
+            const scores = result.scores;
+            const reasons = [];
+
+            if (scores["transportation"] >= 20) {
+                reasons.push(`交通便利（距${details['nearest_metro']}${details['metro_distance']}米）`);
+            }
+
+            if (details["school_count"] > 0) {
+                reasons.push(`学生客群丰富（${details['school_count']}所学校）`);
+            }
+
+            if (details["office_count"] > 5) {
+                reasons.push(`写字楼密集（${details['office_count']}栋）`);
+            }
+
+            if (details["is_restaurant_zone"]) {
+                reasons.push("处于成熟餐饮聚集区");
+            }
+
+            return reasons.length > 0 ? reasons.join("；") : "综合评分较高，具有较好的商业潜力";
         }
 
         function initBarChart(results) {
@@ -735,8 +1358,8 @@
                 '不推荐': 'badge-bad'
             };
 
-            tbody.innerHTML = results.map(r => `
-                <tr>
+            tbody.innerHTML = results.map((r, index) => `
+                <tr onclick="showDetail(${index})">
                     <td><strong style="color:#667eea;font-size:15px;">#${r.rank}</strong></td>
                     <td>${r.address}</td>
                     <td><strong style="font-size:15px;">${r.total_score}</strong></td>
